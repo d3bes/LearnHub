@@ -4,6 +4,8 @@ using LearnHub.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.InMemory ;
+using Microsoft.AspNetCore.Identity.UI ;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,12 +24,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(op=>
 });
 
 
-
-// builder.Services
-//             .AddIdentityApiEndPoints<IdentityUser>()
-//             .AddEntityFrameworkStores<ApplicationDbContext>();
-
-
+builder.Services
+            .AddIdentityApiEndpoints<IdentityUser>()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+            
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -37,7 +37,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// app.MapIdentityApi<IdentityUser>();
+app.MapIdentityApi<IdentityUser>();
 
 app.UseHttpsRedirection();
 
