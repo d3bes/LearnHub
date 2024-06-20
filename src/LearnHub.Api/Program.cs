@@ -1,11 +1,14 @@
+using System.Security.AccessControl;
 using System;
 using System.Collections.Immutable;
-using LearnHub.EF; 
+using LearnHub.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.InMemory ;
 using Microsoft.AspNetCore.Identity.UI ;
+using Microsoft.AspNetCore.Authentication.JwtBearer; // For AddJwtBearer if using JWT
+using Microsoft.AspNetCore.Authorization;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +31,9 @@ builder.Services
             .AddIdentityApiEndpoints<IdentityUser>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
             
+
+// builder.Services.AddAuthentication().AddBearerToken(IdnetityConstants.BearerScheme);
+// builder.Services.AddAutherizationBuilder();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -37,8 +43,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapIdentityApi<IdentityUser>();
 
+app.MapIdentityApi<IdentityUser>();
 app.UseHttpsRedirection();
 
 
