@@ -7,11 +7,14 @@ namespace LearnHub.Core.Models
 {
     public class Grade
     {
-        public int GradeId { get; set; }
-        public float Score { get; set;} 
-        public int CourseId { get; set; }
-        public Course course { get; set; }
-        public Guid UserId { get; set; }
-        public User user { get; set; }
+       public int GradeId { get; set; }
+    public float Score { get; set; } 
+
+    // Foreign key to Course
+    public int CourseId { get; set; }
+    public Course Course { get; set; }
+
+    public string StudentId { get; set; }
+    public User Student { get; set; }   
     }
 }
