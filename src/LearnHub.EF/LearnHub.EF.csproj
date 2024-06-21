@@ -24,4 +24,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LearnHub.Core\LearnHub.Core.csproj" />
+  </ItemGroup>
+
 </Project>
