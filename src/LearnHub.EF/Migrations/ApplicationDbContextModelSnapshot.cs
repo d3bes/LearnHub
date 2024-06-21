@@ -64,10 +64,7 @@ namespace LearnHub.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("InstructorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("InstructorId1")
+                    b.Property<string>("InstructorId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -77,7 +74,7 @@ namespace LearnHub.EF.Migrations
 
                     b.HasKey("CourseId");
 
-                    b.HasIndex("InstructorId1");
+                    b.HasIndex("InstructorId");
 
                     b.ToTable("courses");
                 });
@@ -100,8 +97,9 @@ namespace LearnHub.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("studintId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("studintId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("EnrollmentId");
 
@@ -126,10 +124,7 @@ namespace LearnHub.EF.Migrations
                     b.Property<float>("Score")
                         .HasColumnType("real");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("userId")
+                    b.Property<string>("StudentId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -137,7 +132,7 @@ namespace LearnHub.EF.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("StudentId");
 
                     b.ToTable("grades");
                 });
@@ -423,7 +418,7 @@ namespace LearnHub.EF.Migrations
                 {
                     b.HasOne("LearnHub.Core.Models.User", "Instructor")
                         .WithMany()
-                        .HasForeignKey("InstructorId1")
+                        .HasForeignKey("InstructorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -451,21 +446,21 @@ namespace LearnHub.EF.Migrations
 
             modelBuilder.Entity("LearnHub.Core.Models.Grade", b =>
                 {
-                    b.HasOne("LearnHub.Core.Models.Course", "course")
+                    b.HasOne("LearnHub.Core.Models.Course", "Course")
                         .WithMany()
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LearnHub.Core.Models.User", "user")
+                    b.HasOne("LearnHub.Core.Models.User", "Student")
                         .WithMany()
-                        .HasForeignKey("userId")
+                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("course");
+                    b.Navigation("Course");
 
-                    b.Navigation("user");
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("LearnHub.Core.Models.Lesson", b =>
