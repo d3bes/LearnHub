@@ -23,7 +23,10 @@ namespace LearnHub.EF
         public DbSet<Module> modules { get; set; }
         public DbSet<Lesson> lessons { get; set; }
         public DbSet<Content> content { get; set; }
-        
+
+
+     
+
         //   protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //   {
         // // Specify the migrations assembly

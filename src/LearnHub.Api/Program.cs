@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.InMemory ;
 using Microsoft.AspNetCore.Identity.UI ;
 using Microsoft.AspNetCore.Authentication.JwtBearer; // For AddJwtBearer if using JWT
 using Microsoft.AspNetCore.Authorization;
+using LearnHub.Core.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,7 +24,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApplicationDbContext>(op=>
 {
-    op.UseSqlServer(builder.Configuration.GetConnectionString("SomeeSqlServer"));
+    op.UseSqlServer(builder.Configuration.GetConnectionString("localServer"));
 });
 
 
@@ -31,6 +32,11 @@ builder.Services
             .AddIdentityApiEndpoints<IdentityUser>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
             
+
+// builder.Services.AddIdentity<User, IdentityRole>()
+//         .AddEntityFrameworkStores<ApplicationDbContext>()
+//         .AddDefaultTokenProviders();
+
 
 // builder.Services.AddAuthentication().AddBearerToken(IdnetityConstants.BearerScheme);
 // builder.Services.AddAutherizationBuilder();
