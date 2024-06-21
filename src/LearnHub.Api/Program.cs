@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Identity.UI ;
 using Microsoft.AspNetCore.Authentication.JwtBearer; // For AddJwtBearer if using JWT
 using Microsoft.AspNetCore.Authorization;
 using LearnHub.Core.Models;
+using LearnHub.Core.Interfaces;
+using LearnHub.EF.Repository;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +29,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(op=>
     op.UseSqlServer(builder.Configuration.GetConnectionString("localServer"));
 });
 
+builder.Services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
 builder.Services
             .AddIdentityApiEndpoints<IdentityUser>()
