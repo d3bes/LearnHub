@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using LearnHub.Core;
+using LearnHub.Core.Models;
 
 namespace LearnHub.EF
 {
@@ -14,6 +16,14 @@ namespace LearnHub.EF
         {
             
         }
+
+        public DbSet<Course> courses { get; set; }
+        public DbSet<Enrollment> enrollments { get; set; }
+        public DbSet<Grade> grades { get; set; }
+        public DbSet<Module> modules { get; set; }
+        public DbSet<Lesson> lessons { get; set; }
+        public DbSet<Content> content { get; set; }
+        
         //   protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //   {
         // // Specify the migrations assembly
