@@ -14,10 +14,10 @@ namespace LearnHub.Core.Models
     public string Description { get; set; }
 
     // Foreign key to instructor (one-to-one with User)
-    public string InstructorId { get; set; }
-    public User Instructor { get; set; }
+    public string? InstructorId { get; set; }
+    public User? Instructor { get; set; }
 
-    public List<Module> Modules { get; set; }
+    public List<Module>? Modules { get; set; }
 
 
     }
