@@ -16,6 +16,8 @@ namespace LearnHub.Core.Interfaces
         TEntity getById(int id);
 
         List<TEntity> getAll();
+        List<TEntity> getAll(string[] includs);
+
         TEntity Add(TEntity entity);
 
         TEntity find(Expression<Func<TEntity, bool>> expression);
@@ -43,6 +45,8 @@ namespace LearnHub.Core.Interfaces
 
         Task<TEntity> getByIdAsync(int id);
         Task<List<TEntity>> getAllAsync();
+        Task<List<TEntity>> getAllAsync(string[] includs);
+
         Task<TEntity> AddAsync(TEntity entity);
         Task<TEntity> findAsync(Expression<Func<TEntity, bool>> expression);
         Task<TEntity> findAsync(Expression<Func<TEntity, bool>> expression, string[] includs = null);

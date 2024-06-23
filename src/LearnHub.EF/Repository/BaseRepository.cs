@@ -7,6 +7,7 @@ using LearnHub.Core;
 using LearnHub.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using LearnHub.Core.Consts;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace LearnHub.EF.Repository
 {
@@ -41,12 +42,34 @@ namespace LearnHub.EF.Repository
             return _applicationDbContext.Set<TEntity>().ToList();
 
         }
+        
+       public List<TEntity> getAll(string[] includs)
+        {
+            IQueryable<TEntity> query = _applicationDbContext.Set<TEntity>();
+
+            if(includs != null)
+            {
+                foreach(var item in includs)
+                {
+                     query = query.Include(item);  
+                }
+            }
+            return query.ToList();
+
+        }
+    
+
+
+
         public TEntity find(Expression<Func<TEntity, bool>> expression)
+
         {
 
 
             return _applicationDbContext.Set<TEntity>().SingleOrDefault(expression);
         }
+
+        
 
 
         public TEntity find(Expression<Func<TEntity, bool>> expression, string[] includs)
@@ -81,6 +104,7 @@ namespace LearnHub.EF.Repository
                 {
                     query.Include(item);
                 }
+
 
             }
 
@@ -171,6 +195,20 @@ namespace LearnHub.EF.Repository
         {
             return await _applicationDbContext.Set<TEntity>().ToListAsync();
         }
+         public async  Task<List<TEntity>> getAllAsync(string[] includs)
+         {
+            IQueryable<TEntity> query =  _applicationDbContext.Set<TEntity>();
+
+            if(includs != null)
+            {
+                foreach(var item in includs)
+                {
+                 query = query.Include(item); 
+                }
+            }
+            return await query.ToListAsync();
+
+        }
 
 
 
@@ -223,6 +261,7 @@ namespace LearnHub.EF.Repository
                 {
                     query.Include(item);
                 }
+
 
             }
 
