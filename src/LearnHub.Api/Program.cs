@@ -23,7 +23,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 
-
 builder.Services.AddDbContext<ApplicationDbContext>(op =>
 {
     op.UseSqlServer(builder.Configuration.GetConnectionString("localServer"));
