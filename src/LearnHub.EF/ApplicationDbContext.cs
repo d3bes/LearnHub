@@ -18,7 +18,7 @@ namespace LearnHub.EF
         }
 
         public DbSet<Course> courses { get; set; }
-        public DbSet<Enrollment> enrollments { get; set; }
+        public DbSet<Enrollment> enrollment { get; set; }
         public DbSet<Grade> grades { get; set; }
         public DbSet<Module> modules { get; set; }
         public DbSet<Lesson> lessons { get; set; }
@@ -26,7 +26,6 @@ namespace LearnHub.EF
 
 
      
-
         //   protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //   {
         // // Specify the migrations assembly
