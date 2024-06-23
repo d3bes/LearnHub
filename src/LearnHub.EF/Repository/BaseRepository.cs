@@ -101,9 +101,9 @@ namespace LearnHub.EF.Repository
 
             return query.Where(expression).Take(take).Skip(skip).ToList();
         }
-        public IEnumerable<TEntity> findAll(Expression<Func<TEntity, bool>> criteria, int? take, int? skip, 
+        public IEnumerable<TEntity> findAll(Expression<Func<TEntity, bool>> criteria, int? take, int? skip,
             Expression<Func<TEntity, object>> orderBy = null, string orderByDirection = OrderBy.Ascending)
-             {
+        {
             IQueryable<TEntity> query = _applicationDbContext.Set<TEntity>().Where(criteria);
 
             if (skip.HasValue)
@@ -112,9 +112,9 @@ namespace LearnHub.EF.Repository
             if (take.HasValue)
                 query = query.Take(take.Value);
 
-            if(orderBy != null)
+            if (orderBy != null)
             {
-                if(orderByDirection == OrderBy.Ascending)
+                if (orderByDirection == OrderBy.Ascending)
                     query = query.OrderBy(orderBy);
                 else
                     query = query.OrderByDescending(orderBy);
@@ -123,20 +123,39 @@ namespace LearnHub.EF.Repository
             return query.ToList();
         }
 
-    public TEntity  add(TEntity entity)
-    {
-        _applicationDbContext.Set<TEntity>().Add(entity);
-        _applicationDbContext.SaveChanges();
-        return entity;
-    }
+        public TEntity add(TEntity entity)
+        {
+            _applicationDbContext.Set<TEntity>().Add(entity);
+            _applicationDbContext.SaveChanges();
+            return entity;
+        }
 
-    public IEnumerable<TEntity>  addRange(IEnumerable<TEntity> entities)
-    {
-        _applicationDbContext.Set<TEntity>().AddRange(entities);
-        _applicationDbContext.SaveChanges();
-    return entities.ToList();
+        public IEnumerable<TEntity> addRange(IEnumerable<TEntity> entities)
+        {
+            _applicationDbContext.Set<TEntity>().AddRange(entities);
+            _applicationDbContext.SaveChanges();
+            return entities.ToList();
 
-    }
+        }
+
+        public TEntity update(TEntity entity)
+        {
+            _applicationDbContext.Set<TEntity>().Update(entity);
+            _applicationDbContext.SaveChanges();
+            return entity;
+        }
+        public void Delete(TEntity entity)
+        {
+            _applicationDbContext.Set<TEntity>().Remove(entity);
+            _applicationDbContext.SaveChanges();
+        }
+        public void DeleteRange(IEnumerable<TEntity> entities)
+        {
+            _applicationDbContext.Set<TEntity>().RemoveRange(entities);
+            _applicationDbContext.SaveChanges();
+        }
+
+
 
         /// <summary>
         /// Asynchronise methodes
@@ -226,9 +245,9 @@ namespace LearnHub.EF.Repository
             return await query.Where(expression).Take(take).Skip(skip).ToListAsync();
         }
 
-         public async Task<IEnumerable<TEntity>> findAllAsync(Expression<Func<TEntity, bool>> criteria, int? take, int? skip, 
-            Expression<Func<TEntity, object>> orderBy = null, string orderByDirection = OrderBy.Ascending)
-             {
+        public async Task<IEnumerable<TEntity>> findAllAsync(Expression<Func<TEntity, bool>> criteria, int? take, int? skip,
+           Expression<Func<TEntity, object>> orderBy = null, string orderByDirection = OrderBy.Ascending)
+        {
             IQueryable<TEntity> query = _applicationDbContext.Set<TEntity>().Where(criteria);
 
             if (skip.HasValue)
@@ -237,9 +256,9 @@ namespace LearnHub.EF.Repository
             if (take.HasValue)
                 query = query.Take(take.Value);
 
-            if(orderBy != null)
+            if (orderBy != null)
             {
-                if(orderByDirection == OrderBy.Ascending)
+                if (orderByDirection == OrderBy.Ascending)
                     query = query.OrderBy(orderBy);
                 else
                     query = query.OrderByDescending(orderBy);
@@ -249,22 +268,22 @@ namespace LearnHub.EF.Repository
         }
 
 
- public async Task<TEntity>  addAsync(TEntity entity)
-    {
-        await  _applicationDbContext.Set<TEntity>().AddAsync(entity);
-       await _applicationDbContext.SaveChangesAsync();
-        return  entity;
+        public async Task<TEntity> addAsync(TEntity entity)
+        {
+            await _applicationDbContext.Set<TEntity>().AddAsync(entity);
+            await _applicationDbContext.SaveChangesAsync();
+            return entity;
+        }
+
+        public async Task<IEnumerable<TEntity>> addRangeAsync(IEnumerable<TEntity> entities)
+        {
+            await _applicationDbContext.Set<TEntity>().AddRangeAsync(entities);
+            await _applicationDbContext.SaveChangesAsync();
+            return entities.ToList();
+
+        }
+
+
     }
 
-    public async Task<IEnumerable<TEntity>>  addRangeAsync(IEnumerable<TEntity> entities)
-    {
-     await   _applicationDbContext.Set<TEntity>().AddRangeAsync(entities);
-    await  _applicationDbContext.SaveChangesAsync();
-    return entities.ToList();
-
-    }
-    
-    
-    }
-    
-    }
+}
