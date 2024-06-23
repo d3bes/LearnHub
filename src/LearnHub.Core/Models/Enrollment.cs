@@ -9,7 +9,7 @@ namespace LearnHub.Core.Models
     {
         public int EnrollmentId { get; set; }
         public DateTime enrollmentDate { get; set; }
-        public string studintId { get; set; }
+        public string studentId { get; set; }
         public User student { get; set; }
         public int courseId { get; set; }
         public Course course { get; set; }
