@@ -14,13 +14,13 @@ namespace LearnHub.Api.Controllers
    public class CourseController : ControllerBase
    {
       private readonly IBaseRepository<Course> _courseRepository;
-      private readonly IBaseRepository<User> _instructionRepository;
+      private readonly IBaseRepository<User> _instructorRepository;
 
 
-      public CourseController(IBaseRepository<Course> courseRepository, IBaseRepository<User> instructionRepository)
+      public CourseController(IBaseRepository<Course> courseRepository, IBaseRepository<User> instructorRepository)
       {
          _courseRepository = courseRepository;
-         _instructionRepository = instructionRepository;
+         _instructorRepository = instructorRepository;
 
       }
 
@@ -53,7 +53,7 @@ namespace LearnHub.Api.Controllers
       public async Task<IActionResult> AddCourse(Course course)
       {
          string instructorId = course.InstructorId;
-         var instructor = await _instructionRepository.findAsync(x => x.Id == instructorId);
+         var instructor = await _instructorRepository.findAsync(x => x.Id == instructorId);
          course.Instructor = instructor;
          var result = await _courseRepository.AddAsync(course);
          return Ok(result);
@@ -68,7 +68,7 @@ namespace LearnHub.Api.Controllers
          course.InstructorId = courseDto.InstructorId;
          course.Title = courseDto.Title;
 
-         //var newInstructor = await _instructionRepository.findAsync(x=> x.Id == courseDto.InstructorId);
+         //var newInstructor = await _instructorRepository.findAsync(x=> x.Id == courseDto.InstructorId);
          var result = _courseRepository.update(course);
 
          return Ok(result);
