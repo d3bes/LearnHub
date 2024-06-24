@@ -14,6 +14,7 @@ namespace LearnHub.Core.Interfaces
         /// Synchronise methodes
         /// </summary>
         TEntity getById(int id);
+        TEntity getById(string id);
 
         List<TEntity> getAll();
         List<TEntity> getAll(string[] includs);
@@ -22,7 +23,8 @@ namespace LearnHub.Core.Interfaces
 
         TEntity find(Expression<Func<TEntity, bool>> expression);
         TEntity find(Expression<Func<TEntity, bool>> expression, string[] includs = null);
-
+        bool found(int id);
+        bool found(Expression<Func<TEntity, bool>> expression);
 
 
         IEnumerable<TEntity> findAll(Expression<Func<TEntity, bool>> expression);
@@ -35,7 +37,7 @@ namespace LearnHub.Core.Interfaces
         TEntity add(TEntity entity);
         IEnumerable<TEntity> addRange(IEnumerable<TEntity> entities);
 
-///#######################/
+        ///#######################/
         TEntity update(TEntity entity);
         void Delete(TEntity entity);
         void DeleteRange(IEnumerable<TEntity> entities);
@@ -44,14 +46,20 @@ namespace LearnHub.Core.Interfaces
         /// </summary>
 
         Task<TEntity> getByIdAsync(int id);
+        Task<TEntity> getByIdAsync(string id);
+
         Task<List<TEntity>> getAllAsync();
         Task<List<TEntity>> getAllAsync(string[] includs);
 
         Task<TEntity> AddAsync(TEntity entity);
         Task<TEntity> findAsync(Expression<Func<TEntity, bool>> expression);
         Task<TEntity> findAsync(Expression<Func<TEntity, bool>> expression, string[] includs = null);
+        Task<bool> foundAsync(int id);
+        Task<bool> foundAsync(Expression<Func<TEntity, bool>> expression);
+
+
         Task<IEnumerable<TEntity>> findAllAsync(Expression<Func<TEntity, bool>> expression);
-        Task<IEnumerable<TEntity>> findAllAsync(Expression<Func<TEntity, bool>> expression, string[] includs = null);
+        Task<IEnumerable<TEntity>> findAllAsync(Expression<Func<TEntity, bool>> expression, string[] includs );
         Task<IEnumerable<TEntity>> findAllAsync(Expression<Func<TEntity, bool>> expression, int take, int skip, string[] includs = null);
 
         Task<IEnumerable<TEntity>> findAllAsync(Expression<Func<TEntity, bool>> criteria, int? skip, int? take,
