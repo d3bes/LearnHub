@@ -96,10 +96,6 @@ namespace LearnHub.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("studintId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("EnrollmentId");
 
                     b.HasIndex("courseId");
