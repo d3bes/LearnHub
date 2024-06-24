@@ -28,6 +28,11 @@ namespace LearnHub.EF.Repository
             return _applicationDbContext.Set<TEntity>().Find(id);
 
         }
+        public TEntity getById(string id)
+        {
+            return _applicationDbContext.Set<TEntity>().Find(id);
+        }
+
 
         public TEntity Add(TEntity entity)
         {
@@ -42,22 +47,22 @@ namespace LearnHub.EF.Repository
             return _applicationDbContext.Set<TEntity>().ToList();
 
         }
-        
-       public List<TEntity> getAll(string[] includs)
+
+        public List<TEntity> getAll(string[] includs)
         {
             IQueryable<TEntity> query = _applicationDbContext.Set<TEntity>();
 
-            if(includs != null)
+            if (includs != null)
             {
-                foreach(var item in includs)
+                foreach (var item in includs)
                 {
-                     query = query.Include(item);  
+                    query = query.Include(item);
                 }
             }
             return query.ToList();
 
         }
-    
+
 
 
 
@@ -69,7 +74,7 @@ namespace LearnHub.EF.Repository
             return _applicationDbContext.Set<TEntity>().SingleOrDefault(expression);
         }
 
-        
+
 
 
         public TEntity find(Expression<Func<TEntity, bool>> expression, string[] includs)
@@ -87,6 +92,47 @@ namespace LearnHub.EF.Repository
             return query.SingleOrDefault(expression);
 
         }
+
+
+        public bool found(int id)
+        {
+            try
+            {
+                var obj = _applicationDbContext.Set<TEntity>().Find(id);
+                if (obj != null)
+                {
+
+                    return true;
+                }
+                else
+                    return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        public bool found(Expression<Func<TEntity, bool>> expression)
+        {
+            try
+            {
+                var obj = _applicationDbContext.Set<TEntity>().SingleOrDefaultAsync(expression);
+                if (obj != null)
+                {
+
+                    return true;
+                }
+                else
+                    return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public IEnumerable<TEntity> findAll(Expression<Func<TEntity, bool>> expression)
         {
             return _applicationDbContext.Set<TEntity>().Where(expression).ToList();
@@ -190,20 +236,26 @@ namespace LearnHub.EF.Repository
         {
             return await _applicationDbContext.Set<TEntity>().FindAsync(id);
         }
+        public async Task<TEntity> getByIdAsync(string id)
+        {
+            var entity = await _applicationDbContext.Set<TEntity>().FindAsync(id);
+            return entity;
+        }
+
 
         public async Task<List<TEntity>> getAllAsync()
         {
             return await _applicationDbContext.Set<TEntity>().ToListAsync();
         }
-         public async  Task<List<TEntity>> getAllAsync(string[] includs)
-         {
-            IQueryable<TEntity> query =  _applicationDbContext.Set<TEntity>();
+        public async Task<List<TEntity>> getAllAsync(string[] includs)
+        {
+            IQueryable<TEntity> query = _applicationDbContext.Set<TEntity>();
 
-            if(includs != null)
+            if (includs != null)
             {
-                foreach(var item in includs)
+                foreach (var item in includs)
                 {
-                 query = query.Include(item); 
+                    query = query.Include(item);
                 }
             }
             return await query.ToListAsync();
@@ -243,6 +295,46 @@ namespace LearnHub.EF.Repository
             return await query.SingleOrDefaultAsync(expression);
 
         }
+
+        public async Task<bool> foundAsync(int id)
+        {
+            try
+            {
+                var obj = await _applicationDbContext.Set<TEntity>().FindAsync(id);
+                if (obj != null)
+                {
+
+                    return true;
+                }
+                else
+                    return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        public async Task<bool> foundAsync(Expression<Func<TEntity, bool>> expression)
+        {
+            try
+            {
+                var obj = await _applicationDbContext.Set<TEntity>().SingleOrDefaultAsync(expression);
+                if (obj != null)
+                {
+
+                    return true;
+                }
+                else
+                    return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task<IEnumerable<TEntity>> findAllAsync(Expression<Func<TEntity, bool>> expression)
         {
             return await _applicationDbContext.Set<TEntity>().Where(expression).ToListAsync();
@@ -251,7 +343,7 @@ namespace LearnHub.EF.Repository
 
 
 
-        public async Task<IEnumerable<TEntity>> findAllAsync(Expression<Func<TEntity, bool>> expression, string[] includs = null)
+        public async Task<IEnumerable<TEntity>> findAllAsync(Expression<Func<TEntity, bool>> expression, string[] includs)
         {
 
             IQueryable<TEntity> query = _applicationDbContext.Set<TEntity>();
@@ -259,7 +351,7 @@ namespace LearnHub.EF.Repository
             {
                 foreach (var item in includs)
                 {
-                    query.Include(item);
+                    query = query.Include(item);
                 }
 
 
