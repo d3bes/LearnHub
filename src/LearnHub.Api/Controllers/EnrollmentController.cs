@@ -8,6 +8,8 @@ using LearnHub.Core.Models;
 using LearnHub.Core.Dto;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using LearnHub.Core.Consts;
 
 namespace LearnHub.Api.Controllers
 {
@@ -33,6 +35,8 @@ namespace LearnHub.Api.Controllers
         /// <summary>
         ///Retrieves all enrollments.
         /// </summary>
+        
+         [Authorize( Roles = Role.admin)] 
         [HttpGet("AllEnrollments")]
         public async Task<IActionResult> GetAllEnrollments()
         {
