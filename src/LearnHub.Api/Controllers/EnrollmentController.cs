@@ -36,7 +36,7 @@ namespace LearnHub.Api.Controllers
         ///Retrieves all enrollments.
         /// </summary>
         
-        [Authorize( Roles = Role.admin)] 
+         [Authorize( Roles = Role.admin)] 
         [HttpGet("AllEnrollments")]
         public async Task<IActionResult> GetAllEnrollments()
         {
