@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Authorization;
 using LearnHub.Core.Models;
 using LearnHub.Core.Interfaces;
 using LearnHub.EF.Repository;
+using LearnHub.Core.Services;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +22,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(op=>
+ {       op.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme 
+        {
+            In = ParameterLocation.Header,
+            Name=  "Authorization",
+            Type = SecuritySchemeType.ApiKey
+        });
+        op.OperationFilter<SecurityRequirementsOperationFilter>();
+      }  );
 builder.Services.AddControllers();
 
 
@@ -29,6 +40,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(op =>
 });
 
 builder.Services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+builder.Services.AddTransient(typeof(ITokenService), typeof(TokenService));
 
 builder.Services
             .AddIdentityApiEndpoints<IdentityUser>()
@@ -43,7 +55,6 @@ builder.Services
 // builder.Services.AddAuthentication().AddBearerToken(IdnetityConstants.BearerScheme);
 // builder.Services.AddAutherizationBuilder();
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -59,3 +70,5 @@ app.UseHttpsRedirection();
 
 
 app.Run();
+
+
