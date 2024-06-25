@@ -15,6 +15,7 @@ using LearnHub.EF.Repository;
 using LearnHub.Core.Services;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using Microsoft.Extensions.DependencyInjection;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,7 +32,6 @@ builder.Services.AddSwaggerGen(op=>
         });
         op.OperationFilter<SecurityRequirementsOperationFilter>();
       }  );
-builder.Services.AddControllers();
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(op =>
@@ -42,9 +42,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(op =>
 builder.Services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddTransient(typeof(ITokenService), typeof(TokenService));
 
+
+
+
 builder.Services
-            .AddIdentityApiEndpoints<IdentityUser>()
+            .AddIdentityApiEndpoints<IdentityUser>().AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
+             
+
+
+builder.Services.AddControllers();
 
 
 // builder.Services.AddIdentity<User, IdentityRole>()
