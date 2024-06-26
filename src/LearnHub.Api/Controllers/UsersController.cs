@@ -197,5 +197,128 @@ namespace LearnHub.Api.Controllers
 
             return BadRequest(result.Errors);
         }
+
+
+          [HttpPost("{id}/reset-password")]
+        public async Task<IActionResult> ResetPassword(string id, [FromBody] ResetPasswordDto resetPasswordDto)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, resetToken, resetPasswordDto.NewPassword);
+
+            if (result.Succeeded)
+            {
+                return Ok("Password reset successfully");
+            }
+
+            return BadRequest(result.Errors);
+        }
+
+        [HttpPut("{id}/deactivate")]
+        public async Task<IActionResult> DeactivateUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            user.LockoutEnd = DateTimeOffset.MaxValue;
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return Ok("User deactivated successfully");
+            }
+
+            return BadRequest(result.Errors);
+        }
+
+        [HttpPut("{id}/activate")]
+        public async Task<IActionResult> ActivateUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            user.LockoutEnd = null;
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return Ok("User activated successfully");
+            }
+
+            return BadRequest(result.Errors);
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchUsers([FromQuery] string searchTerm)
+        {
+            var users = _userManager.Users
+                .Where(u => u.UserName.Contains(searchTerm) || u.Email.Contains(searchTerm))
+                .Select(u => new { u.Id, u.UserName, u.Email })
+                .ToList();
+
+            return Ok(users);
+        }
+
+        // [HttpGet("{id}/activity")]
+        // public async Task<IActionResult> GetUserActivity(string id)
+        // {
+        //     // Implement logic to retrieve user activity
+        //     // This might include logging information, course completions, etc.
+        //     return Ok("User activity data");
+        // }
+
+        [HttpPost("bulk-import")]
+        public async Task<IActionResult> BulkImportUsers([FromBody] List<ImportUserDto> importUsersDto)
+        {
+            foreach (var userDto in importUsersDto)
+            {
+                var user = new IdentityUser
+                {
+                    UserName = userDto.UserName,
+                    Email = userDto.Email
+                };
+                var result = await _userManager.CreateAsync(user, userDto.Password);
+
+                if (!result.Succeeded)
+                {
+                    return BadRequest(result.Errors);
+                }
+            }
+
+            return Ok("Users imported successfully");
+        }
+
+        // [HttpGet("role/{roleName}")]
+        // public async Task<IActionResult> GetUsersByRole(string roleName)
+        // {
+        //     var users = await _userManager.GetUsersInRoleAsync(roleName);
+        //     var userDtos = users.Select(u => new { u.Id, u.UserName, u.Email }).ToList();
+
+        //     return Ok(userDtos);
+        // }
+
+        // [HttpPost("{id}/send-notification")]
+        // public async Task<IActionResult> SendNotification(string id, [FromBody] NotificationDto notificationDto)
+        // {
+        //     var user = await _userManager.FindByIdAsync(id);
+        //     if (user == null)
+        //     {
+        //         return NotFound("User not found");
+        //     }
+
+        //     // Implement logic to send notification (email, SMS, etc.)
+        //     return Ok("Notification sent successfully");
+        // }
     }
 }
