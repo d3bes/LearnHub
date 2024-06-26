@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using LearnHub.Core.Consts;
+using LearnHub.Api.Extensions;
 
 
 namespace LearnHub.Api.Controllers
@@ -83,24 +84,17 @@ namespace LearnHub.Api.Controllers
             // Get all users who belong to the role
             var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name);
 
-            // Optionally, you can include additional user information or filter the results
-            var usersData = usersInRole.Select(u => new
-            {
-                u.Id,
-                u.UserName,
-                u.Email,
+            var usersData = usersInRole.ToList();
 
-            }).ToList();
-
-            var users = new List<UsersDataDto>();
+            var users = new List<UserDto>();
             foreach (var user in usersData)
             {
-                var userDto = new UsersDataDto() { Email = user.Email, UserName = user.UserName, Id = user.Id };
+                var userDto = user.ToUserDto();
                 users.Add(userDto);
             }
             UsersDataAndCountDto usersData_count = new UsersDataAndCountDto()
             {
-                usersDataDto = users,
+                usersData = users,
                 usersCount = users.Count()
             };
 
@@ -151,8 +145,6 @@ namespace LearnHub.Api.Controllers
 
 
         }
-
-
 
         [HttpDelete("Roles/Delete/{roleId}")]
         public async Task<IActionResult> DeleteRole(string roleId)
