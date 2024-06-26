@@ -7,7 +7,7 @@ namespace LearnHub.Core.Dto
 {
     public class UsersDataAndCountDto
     {
-        public List<UsersDataDto> usersDataDto { get; set; }
+        public List<UserDto> usersData { get; set; }
         public int usersCount { get; set; }
 
     }
