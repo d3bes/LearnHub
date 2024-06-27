@@ -152,8 +152,8 @@ namespace LearnHub.Api.Controllers
             {
                 return Ok("Password changed successfully");
             }
-
-            return BadRequest(result.Errors);
+                
+             return BadRequest(result.Errors);
         }
 
 
@@ -171,7 +171,7 @@ namespace LearnHub.Api.Controllers
 
             if (result.Succeeded)
             {
-                user.UserName = changeEmailDto.NewEmail; // Optional: Update username if needed
+               // user.UserName = changeEmailDto.NewEmail; // Optional: Update username if needed
                 await _userManager.UpdateAsync(user);
                 return Ok("Email changed successfully");
             }
@@ -200,7 +200,7 @@ namespace LearnHub.Api.Controllers
 
 
           [HttpPost("{id}/reset-password")]
-        public async Task<IActionResult> ResetPassword(string id, [FromBody] ResetPasswordDto resetPasswordDto)
+        public async Task<IActionResult> ResetPassword(string id, [FromBody] ResetPasswordDto   resetPasswordDto)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
@@ -209,10 +209,15 @@ namespace LearnHub.Api.Controllers
             }
 
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            if(resetToken == null)
+            {
+                _logger.LogWarning(" resetToken is null");
+            }
             var result = await _userManager.ResetPasswordAsync(user, resetToken, resetPasswordDto.NewPassword);
 
             if (result.Succeeded)
             {
+                _logger.LogInformation($"{user.UserName} password reset successful");
                 return Ok("Password reset successfully");
             }
 
@@ -298,6 +303,8 @@ namespace LearnHub.Api.Controllers
 
             return Ok("Users imported successfully");
         }
+        
+
 
         // [HttpGet("role/{roleName}")]
         // public async Task<IActionResult> GetUsersByRole(string roleName)
