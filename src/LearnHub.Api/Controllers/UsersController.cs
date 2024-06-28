@@ -11,6 +11,7 @@ using System.Security.Claims;
 using LearnHub.Core.Consts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using LearnHub.Core.Models;
 
 namespace LearnHub.Api.Controllers
 {
@@ -20,17 +21,17 @@ namespace LearnHub.Api.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<User> _signInManager;
 
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
         private readonly  ILogger<UsersController> _logger;
         //         {
         //   "email": "Admin.test@sec.com",
         //   "password": "Admin_pwd1"}
 
 
-        public UsersController(UserManager<IdentityUser> userManager , ILogger<UsersController> logger, RoleManager<IdentityRole> roleManager, SignInManager<IdentityUser> signInManager)
+        public UsersController(UserManager<User> userManager , ILogger<UsersController> logger, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager)
         {
 
             _roleManager = roleManager;
@@ -269,7 +270,7 @@ namespace LearnHub.Api.Controllers
         {
             var users = _userManager.Users
                 .Where(u => u.UserName.Contains(searchTerm) || u.Email.Contains(searchTerm))
-                .Select(u => new { u.Id, u.UserName, u.Email })
+                .Select(u => new { u.Id, u.UserName, u.Email, u.Name })
                 .ToList();
 
             return Ok(users);
@@ -288,7 +289,7 @@ namespace LearnHub.Api.Controllers
         {
             foreach (var userDto in importUsersDto)
             {
-                var user = new IdentityUser
+                var user = new User
                 {
                     UserName = userDto.UserName,
                     Email = userDto.Email
