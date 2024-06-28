@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using LearnHub.Core.Interfaces;
 using LearnHub.Core.Models;
 using LearnHub.Core.Dto;
+using LearnHub.Api.Extensions;
 
 namespace LearnHub.Api.Controllers
 {
@@ -28,8 +29,8 @@ namespace LearnHub.Api.Controllers
       public async Task<IActionResult> GetAllCourses()
       {
 
-         var courses = await _courseRepository.getAllAsync(["Instructor"]);
-         return Ok(courses);
+         var courses = await _courseRepository.getAllAsync(["instructor"]);
+         return Ok(courses.ToCourseListDto());
 
       }
 
@@ -38,10 +39,10 @@ namespace LearnHub.Api.Controllers
       {
          if (id != null)
          {
-            var result = await _courseRepository.getByIdAsync(id);
+            Course result = await _courseRepository.getByIdAsync(id);
             if (result != null)
             {
-               return Ok(result);
+               return Ok(result.ToCourseDto());
             }
             else
                return NotFound();
@@ -56,7 +57,7 @@ namespace LearnHub.Api.Controllers
          var instructor = await _instructorRepository.findAsync(x => x.Id == instructorId);
          course.Instructor = instructor;
          var result = await _courseRepository.AddAsync(course);
-         return Ok(result);
+         return Ok(result.ToCourseDto());
       }
 
       [HttpPost("updateCourse")]
@@ -71,7 +72,7 @@ namespace LearnHub.Api.Controllers
          //var newInstructor = await _instructorRepository.findAsync(x=> x.Id == courseDto.InstructorId);
          var result = _courseRepository.update(course);
 
-         return Ok(result);
+         return Ok(result.ToCourseDto());
 
       }
 
