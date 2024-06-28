@@ -10,12 +10,13 @@ using LearnHub.Core.Models;
 
 namespace LearnHub.EF
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options ): base(options)
         {
             
         }
+
 
         public DbSet<Course> courses { get; set; }
         public DbSet<Enrollment> enrollment { get; set; }
@@ -26,20 +27,25 @@ namespace LearnHub.EF
 
 
      
-        //   protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //   {
-        // // Specify the migrations assembly
-        // optionsBuilder.UseSqlServer(
-        //     "workstation id=LearnHub.mssql.somee.com;packet size=4096;user id=abdelrahman95856_SQLLogin_1;pwd=nfdplhaa8t;data source=LearnHub.mssql.somee.com;persist security info=False;initial catalog=LearnHub;TrustServerCertificate=True", 
-        //            options => options.MigrationsAssembly("LearnHub.EF"));
-        //    }
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
 
-        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        // {
-        //    optionsBuilder.UseSqlServer( "workstation id=LearnHub.mssql.somee.com;packet size=4096;user id=abdelrahman95856_SQLLogin_1;pwd=nfdplhaa8t;data source=LearnHub.mssql.somee.com;persist security info=False;initial catalog=LearnHub;TrustServerCertificate=True"
-        //    ,    options => options.MigrationsAssembly("LearnHub.Api"));
+        // Configure the relationship between Grade and User (Student)
+        builder.Entity<Grade>()
+            .HasOne(g => g.Student)
+            .WithMany()
+            .HasForeignKey(g => g.StudentId)
+            .OnDelete(DeleteBehavior.NoAction);
+        
 
-        // }
+        // Configure the relationship between Grade and Course
+        builder.Entity<Grade>()
+            .HasOne(g => g.Course)
+            .WithMany()
+            .HasForeignKey(g => g.CourseId)
+            .OnDelete(DeleteBehavior.NoAction);
+    }
 
     }
 }
