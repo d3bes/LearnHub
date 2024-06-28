@@ -13,5 +13,7 @@ namespace LearnHub.Core.Dto
 
     // Foreign key to instructor (one-to-one with User)
     public string InstructorId { get; set; }
+    public string InstructorName { get; set; }
+
     }
 }
