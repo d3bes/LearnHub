@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using LearnHub.Core.Consts;
+using LearnHub.Api.Extensions;
 
 namespace LearnHub.Api.Controllers
 {
@@ -20,10 +21,10 @@ namespace LearnHub.Api.Controllers
         private readonly IBaseRepository<Enrollment> _enrollmentRepository;
         private readonly IBaseRepository<Course> _courseRepository;
         private readonly IBaseRepository<User> _studentRepository;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
 
         public EnrollmentController(IBaseRepository<Enrollment> enrollmentRepository
-       , IBaseRepository<Course> courseRepository, IBaseRepository<User> studentRepository, UserManager<IdentityUser> userManager)
+       , IBaseRepository<Course> courseRepository, IBaseRepository<User> studentRepository, UserManager<User> userManager)
         {
             _enrollmentRepository = enrollmentRepository;
             _studentRepository = studentRepository;
@@ -41,8 +42,8 @@ namespace LearnHub.Api.Controllers
         public async Task<IActionResult> GetAllEnrollments()
         {
 
-            var enrollments = await _enrollmentRepository.getAllAsync();
-            return Ok(enrollments);
+            var enrollments = await _enrollmentRepository.getAllAsync(["student", "course"]);
+            return Ok(enrollments.ToEnrollmentListDto());
         }
 
         /// <summary>
@@ -52,8 +53,8 @@ namespace LearnHub.Api.Controllers
         public async Task<IActionResult> GetStudentEnrollments(string student_id)
         {
 
-            var enrollments = await _enrollmentRepository.findAllAsync(x => x.studentId == student_id);
-            return Ok(enrollments);
+            var enrollments = await _enrollmentRepository.findAllAsync(x => x.studentId == student_id,["student", "course"]);
+            return Ok(enrollments.ToEnrollmentListDto());
 
         }
 
@@ -94,7 +95,7 @@ namespace LearnHub.Api.Controllers
         {
             // var enrollments = await _enrollmentRepository.findAllAsync(std => std.studentId == student_id);
 
-            var enrollments = await _enrollmentRepository.findAllAsync(std => std.studentId == student_id, ["course"]);
+            var enrollments = await _enrollmentRepository.findAllAsync(std => std.studentId == student_id, ["student", "course"]);
 
             List<Course> courses = new List<Course>();
             foreach (var item in enrollments)
@@ -120,7 +121,7 @@ namespace LearnHub.Api.Controllers
                 }
             }
 
-            return Ok(courses);
+            return Ok(courses.ToCourseListDto());
 
         }
 
@@ -133,7 +134,7 @@ namespace LearnHub.Api.Controllers
         {
             var enrollments = await _enrollmentRepository.findAllAsync(c => c.courseId == courseId);
             // var enrollments = await  _enrollmentRepository.findAllAsync( c => c.courseId == courseId, ["student"]);
-            var students = new List<IdentityUser>();
+            var students = new List<User>();
             foreach (var enroll in enrollments)
             {
                 var student = await _userManager.FindByIdAsync(enroll.studentId);
@@ -146,7 +147,7 @@ namespace LearnHub.Api.Controllers
 
             if (students.Any())
             {
-                return Ok(students);
+                return Ok(students.ToUserDtoList());
             }
             else
             {
@@ -165,7 +166,7 @@ namespace LearnHub.Api.Controllers
             var enrollment = await _enrollmentRepository.findAllAsync(std => std.studentId == student_id);
             _enrollmentRepository.DeleteRange(enrollment);
 
-            return Ok(enrollment);
+            return Ok(enrollment.ToEnrollmentListDto());
         }
 
 
