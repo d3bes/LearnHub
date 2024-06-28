@@ -10,6 +10,10 @@ namespace LearnHub.Core.Dto
         public float Score { get; set; }
         public int CourseId { get; set; }
         public string StudentId { get; set; }
+        public DateTime? dateTime { get; set; }
+        public string GradeName { get; set; }
+
+
 
     }
 }
