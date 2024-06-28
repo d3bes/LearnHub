@@ -84,7 +84,7 @@ namespace LearnHub.EF.Repository
             {
                 foreach (var item in includs)
                 {
-                    query.Include(item);
+                  query=  query.Include(item);
                 }
 
             }
@@ -148,7 +148,7 @@ namespace LearnHub.EF.Repository
             {
                 foreach (var item in includs)
                 {
-                    query.Include(item);
+                   query=  query.Include(item);
                 }
 
 
@@ -164,7 +164,7 @@ namespace LearnHub.EF.Repository
             {
                 foreach (var item in includs)
                 {
-                    query.Include(item);
+                   query= query.Include(item);
                 }
 
             }
@@ -287,7 +287,7 @@ namespace LearnHub.EF.Repository
             {
                 foreach (var item in includs)
                 {
-                    query.Include(item);
+                  query= query.Include(item);
                 }
 
             }
@@ -357,7 +357,8 @@ namespace LearnHub.EF.Repository
 
             }
 
-            return await query.Where(expression).ToListAsync();
+            var result = await query.Where(expression).ToListAsync();
+            return result;
         }
 
         public async Task<IEnumerable<TEntity>> findAllAsync(Expression<Func<TEntity, bool>> expression, int take, int skip, string[] includs = null)
@@ -368,7 +369,7 @@ namespace LearnHub.EF.Repository
             {
                 foreach (var item in includs)
                 {
-                    query.Include(item);
+                    query = query.Include(item);
                 }
 
             }
