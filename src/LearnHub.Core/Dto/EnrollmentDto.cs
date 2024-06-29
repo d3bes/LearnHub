@@ -11,5 +11,9 @@ namespace LearnHub.Core.Dto
         public string studentId { get; set; }
         public int courseId { get; set; }
 
+        public DateTime enrollmentDate { get; set; }
+        public string StudentName { get; set; }
+        public string CourseName { get; set; }
+
     }
 }
