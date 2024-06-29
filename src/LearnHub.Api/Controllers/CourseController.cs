@@ -29,7 +29,7 @@ namespace LearnHub.Api.Controllers
       public async Task<IActionResult> GetAllCourses()
       {
 
-         var courses = await _courseRepository.getAllAsync(["instructor"]);
+         var courses = await _courseRepository.getAllAsync(["Instructor"]);
          return Ok(courses.ToCourseListDto());
 
       }
@@ -39,7 +39,7 @@ namespace LearnHub.Api.Controllers
       {
          if (id != null)
          {
-            Course result = await _courseRepository.getByIdAsync(id);
+            Course result = await _courseRepository.findAsync(c=> c.CourseId == id ,["Instructor"]);
             if (result != null)
             {
                return Ok(result.ToCourseDto());
