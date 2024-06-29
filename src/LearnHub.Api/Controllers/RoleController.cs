@@ -28,13 +28,13 @@ namespace LearnHub.Api.Controllers
     public class RoleController : ControllerBase
     {
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
 
         //         {
         //   "email": "Admin.test@sec.com",
         //   "password": "Admin_pwd1"}
 
-        public RoleController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public RoleController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
 
             _roleManager = roleManager;
@@ -86,12 +86,13 @@ namespace LearnHub.Api.Controllers
 
             var usersData = usersInRole.ToList();
 
-            var users = new List<UserDto>();
-            foreach (var user in usersData)
-            {
-                var userDto = user.ToUserDto();
-                users.Add(userDto);
-            }
+            // var users = new List<UserDto>();
+            // foreach (var user in usersData)
+            // {
+            //     var userDto = user.ToUserDto();
+            //     users.Add(userDto);
+            // }
+            var users = usersData.ToUserDtoList();
             UsersDataAndCountDto usersData_count = new UsersDataAndCountDto()
             {
                 usersData = users,
