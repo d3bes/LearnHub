@@ -34,10 +34,12 @@ builder.Services.AddSwaggerGen(op=>
       }  );
 
 
-builder.Services.AddDbContext<ApplicationDbContext>(op =>
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    op.UseSqlServer(builder.Configuration.GetConnectionString("localServer"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("localServer"));
 });
+
 
 builder.Services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddTransient(typeof(ITokenService), typeof(TokenService));
@@ -46,7 +48,7 @@ builder.Services.AddTransient(typeof(ITokenService), typeof(TokenService));
 
 
 builder.Services
-            .AddIdentityApiEndpoints<IdentityUser>().AddRoles<IdentityRole>()
+            .AddIdentityApiEndpoints<User>().AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
              
 
@@ -60,7 +62,7 @@ builder.Services.AddControllers();
 
 
 // builder.Services.AddAuthentication().AddBearerToken(IdnetityConstants.BearerScheme);
-// builder.Services.AddAutherizationBuilder();
+ builder.Services.AddAuthorizationBuilder();
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -70,7 +72,7 @@ if (app.Environment.IsDevelopment())
 }
 
 
-app.MapIdentityApi<IdentityUser>();
+app.MapIdentityApi<User>();
 app.MapControllers();
 
 app.UseHttpsRedirection();
