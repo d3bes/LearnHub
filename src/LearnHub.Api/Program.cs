@@ -22,6 +22,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(op=>
  {       op.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme 
@@ -41,7 +42,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 
-builder.Services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+// builder.Services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient(typeof(ITokenService), typeof(TokenService));
 
 
