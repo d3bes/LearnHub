@@ -18,18 +18,19 @@ namespace LearnHub.Api.Controllers
     public class GradeController : ControllerBase
     {
 
-        private readonly IBaseRepository<Grade> _gradeRepository;
-        private readonly IBaseRepository<Course> _courseRepository;
-        private readonly IBaseRepository<User> _userRepository;
+        // private readonly IBaseRepository<Grade> _gradeRepository;
+        // private readonly IBaseRepository<Course> _courseRepository;
+        // private readonly IBaseRepository<User> _userRepository;
         private readonly ILogger<GradeController> _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GradeController(IBaseRepository<Grade> gradeRepository, IBaseRepository<Course> courseRepository
-                            , IBaseRepository<User> userRepository, ILogger<GradeController> logger)
+        public GradeController(ILogger<GradeController> logger, IUnitOfWork unitOfWork)// IBaseRepository<Grade> gradeRepository, IBaseRepository<Course> courseRepository, IBaseRepository<User> userRepository )
         {
             _logger = logger;
-            _gradeRepository = gradeRepository;
-            _courseRepository = courseRepository;
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
+            // _gradeRepository = gradeRepository;
+            // _courseRepository = courseRepository;
+            // _userRepository = userRepository;
         }
 
         [HttpGet("all")]
@@ -37,7 +38,8 @@ namespace LearnHub.Api.Controllers
         {
             // List<Grade> grades = await _gradeRepository.getAllAsync(["Student", "Course"]);
 
-            List<Grade> grades = await _gradeRepository.getAllAsync(["Student", "Course"]);
+            // List<Grade> grades = await _gradeRepository.getAllAsync(["Student", "Course"]);
+            List<Grade> grades = await _unitOfWork.grades.getAllAsync(["Student", "Course"]);
 
             // _logger.LogInformation(grades[1].GradeName);
             var gradesDto = new List<GradeDto>();
@@ -58,7 +60,9 @@ namespace LearnHub.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetGradeById(int id)
         {
-            var grade = await _gradeRepository.findAsync(g => g.GradeId == id, ["Student", "Course"]);
+            // var grade = await _gradeRepository.findAsync(g => g.GradeId == id, ["Student", "Course"]);
+            var grade = await _unitOfWork.grades.findAsync(g => g.GradeId == id, ["Student", "Course"]);
+
             if (grade == null)
             {
                 return NotFound("Grade not found");
@@ -69,20 +73,24 @@ namespace LearnHub.Api.Controllers
             //     var student = await _userRepository.getByIdAsync(grade.StudentId);
             //     gradeDto.StudentName = student.Name;
             // }
-           
+
             return Ok(grade.ToGradeDto());
         }
 
         [HttpPost("create")]
         public async Task<IActionResult> CreateGrade([FromBody] CreateGradeDto createGradeDto)
         {
-            var course = await _courseRepository.getByIdAsync(createGradeDto.CourseId);
+            // var course = await _courseRepository.getByIdAsync(createGradeDto.CourseId);
+            var course = await _unitOfWork.courses.getByIdAsync(createGradeDto.CourseId);
+
             if (course == null)
             {
                 return NotFound("Course not found");
             }
 
-            var student = await _userRepository.getByIdAsync(createGradeDto.StudentId);
+            // var student = await _userRepository.getByIdAsync(createGradeDto.StudentId);
+            var student = await _unitOfWork.users.getByIdAsync(createGradeDto.StudentId);
+
             if (student == null)
             {
                 return NotFound("Student not found");
@@ -98,7 +106,9 @@ namespace LearnHub.Api.Controllers
 
             };
 
-            await _gradeRepository.addAsync(grade);
+            // await _gradeRepository.addAsync(grade);
+            await _unitOfWork.grades.addAsync(grade);
+            _unitOfWork.Complete();
             return Ok(grade.ToGradeDto());
         }
 
@@ -110,34 +120,45 @@ namespace LearnHub.Api.Controllers
                 return BadRequest("Grade ID mismatch");
             }
 
-            var grade = await _gradeRepository.findAsync(g => g.GradeId == updateGradeDto.GradeId,["Student", "Course"]);
+            // var grade = await _gradeRepository.findAsync(g => g.GradeId == updateGradeDto.GradeId, ["Student", "Course"]);
+            var grade = await _unitOfWork.grades.findAsync(g => g.GradeId == updateGradeDto.GradeId, ["Student", "Course"]);
+
             if (grade == null)
             {
                 return NotFound("Grade not found");
             }
 
             grade.Score = updateGradeDto.Score;
-            _gradeRepository.update(grade);
+            // _gradeRepository.update(grade);
+            _unitOfWork.grades.update(grade);
+            _unitOfWork.Complete();
             return Ok(grade.ToGradeDto());
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGrade(int id)
         {
-            var grade = await _gradeRepository.getByIdAsync(id);
+            // var grade = await _gradeRepository.getByIdAsync(id);
+            var grade = await _unitOfWork.grades.getByIdAsync(id);
+
             if (grade == null)
             {
                 return NotFound("Grade not found");
             }
 
-            _gradeRepository.Delete(grade);
+            // _gradeRepository.Delete(grade);
+            _unitOfWork.grades.Delete(grade);
+            _unitOfWork.Complete();
+
             return Ok("Grade deleted successfully");
         }
 
         [HttpGet("course/{courseId}")]
         public async Task<IActionResult> GetGradesByCourseId(int courseId)
         {
-            var grades = await _gradeRepository.findAllAsync(g => g.CourseId == courseId, ["Student", "Course"]);
+            // var grades = await _gradeRepository.findAllAsync(g => g.CourseId == courseId, ["Student", "Course"]);
+            var grades = await _unitOfWork.grades.findAllAsync(g => g.CourseId == courseId, ["Student", "Course"]);
+
             // var grades = await _gradeRepository.findAllAsync(g => g.CourseId == courseId);
 
 
@@ -147,7 +168,8 @@ namespace LearnHub.Api.Controllers
         [HttpGet("student/{studentId}")]
         public async Task<IActionResult> GetGradesByStudentId(string studentId)
         {
-            var grades = await _gradeRepository.findAllAsync(g => g.StudentId == studentId, ["Student", "Course"]);
+            // var grades = await _gradeRepository.findAllAsync(g => g.StudentId == studentId, ["Student", "Course"]);
+            var grades = await _unitOfWork.grades.findAllAsync(g => g.StudentId == studentId, ["Student", "Course"]);
 
             return Ok(grades.ToGradsListDto());
         }
@@ -155,7 +177,9 @@ namespace LearnHub.Api.Controllers
         [HttpGet("student/{courseId}/{studentId}")]
         public async Task<IActionResult> GetStudentGradesByCourse(string studentId, int courseId)
         {
-            var grades = await _gradeRepository.findAllAsync(g => g.StudentId == studentId && g.CourseId == courseId, ["Student", "Course"]);
+            // var grades = await _gradeRepository.findAllAsync(g => g.StudentId == studentId && g.CourseId == courseId, ["Student", "Course"]);
+            var grades = await _unitOfWork.grades.findAllAsync(g => g.StudentId == studentId && g.CourseId == courseId, ["Student", "Course"]);
+
             return Ok(grades.ToGradsListDto());
         }
     }
